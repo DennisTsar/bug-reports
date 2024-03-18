@@ -1,0 +1,24 @@
+name: 'Ubuntu package-lock.json'
+on:
+  workflow_dispatch: { }
+
+jobs:
+  run:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+      - name: 'Set up Java'
+        uses: 'actions/setup-java@v4'
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: 'Setup Gradle'
+        uses: 'gradle/actions/setup-gradle@v3'
+      - name: 'Build Distribution'
+        run: ./gradlew jsBrowserDistribution
+        continue-on-error: true
+      - name: 'Upgrade Lock' # Not up to date
+        run: ./gradlew kotlinUpgradePackageLock
+      - name: 'Output package-lock.json changes'
+        run: git diff -- kotlin-js-store/package-lock.json

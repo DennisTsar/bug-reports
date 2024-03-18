@@ -1,0 +1,29 @@
+name: 'Windows package-lock.json'
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: 'windows-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+      - name: 'Set up Java'
+        uses: 'actions/setup-java@v4'
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: 'Setup Gradle'
+        uses: 'gradle/actions/setup-gradle@v3'
+      - name: 'Upgrade Lock' # Up to date
+        run: ./gradlew kotlinUpgradePackageLock
+      - name: 'Output package-lock.json changes'
+        run: git diff -- kotlin-js-store/package-lock.json
+      - name: 'Switch to forward slashes'
+        run: sed -i 's/\\/\//g' kotlin-js-store/package-lock.json
+      - name: 'Output package-lock.json changes'
+        run: git diff -- kotlin-js-store/package-lock.json
+      - name: 'Upgrade Lock' # Not up to date
+        run: ./gradlew kotlinUpgradePackageLock
+      - name: 'Output package-lock.json changes'
+        run: git diff -- kotlin-js-store/package-lock.json
