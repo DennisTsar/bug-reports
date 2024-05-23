@@ -17,7 +17,6 @@ kotlin {
     sourceSets {
         jsMain.dependencies {
             implementation("org.jetbrains.compose.runtime:runtime:1.6.10")
-            implementation("org.jetbrains.compose.html:html-core:1.6.10")
             implementation(project(":lib"))
         }
     }
