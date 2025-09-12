@@ -1,0 +1,25 @@
+name: 'Repro'
+on:
+  workflow_dispatch: { }
+  push:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v6'
+      - name: 'Set up Java'
+        uses: 'actions/setup-java@v5'
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: 'Setup Gradle'
+        uses: 'gradle/actions/setup-gradle@v5'
+      - name: 'Build'
+        run: ./gradlew :compileDevelopmentExecutableKotlinJs
+      - name: 'Comment out'
+        run: sed -i '14,16{s|^|//|}' src/jsMain/kotlin/main.kt
+      - name: 'Build 2'
+        timeout-minutes: 10
+        run: ./gradlew :compileDevelopmentExecutableKotlinJs
