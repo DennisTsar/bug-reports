@@ -27,4 +27,7 @@ jobs:
         run: |
           docker run --rm myapp:ci java -version
           docker run --rm -v "$PWD":/workspace -w /workspace myapp:ci sh ./check-java.sh
+
+      - name: Run something else in the container
+        run: |
           docker run --rm myapp:ci kobweb --version
